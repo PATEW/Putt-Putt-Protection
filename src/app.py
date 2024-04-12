@@ -1,9 +1,9 @@
 import pyautogui
-import course, ball, club
+import course, ball, club, goal
 
-# Function to reassert window stacking order
 def reassert_order():
     course.window.lift()
+    goal.window.lift()
     ball.window.lift()
     club.window.lift()
 
@@ -18,10 +18,12 @@ if __name__ == '__main__':
     club = club.Club()
     course = course.Course()
     ball = ball.Ball()
+    goal = goal.Goal()
 
     club.window.bind("<FocusIn>", lambda e: reassert_order())    # Bind the focus in event to reassert order
     course.window.bind("<FocusIn>", lambda e: reassert_order())
-
+    ball.window.bind("<FocusIn>", lambda e: reassert_order())
+    goal.window.bind("<FocusIn>", lambda e: reassert_order())
     reassert_order() # Initial stacking order
 
     club.window.after(10, periodic_update)
