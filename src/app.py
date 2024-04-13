@@ -9,6 +9,7 @@ def reassert_order():
 
 def periodic_update():
     x, y = pyautogui.position()
+    club.rotate_club(x, y, ball.getLocation())
     club_window_width = club.window.winfo_width()
     club_window_height = club.window.winfo_height()
     club.window.geometry(f'+{x - club_window_width // 2}+{y - club_window_height // 2}')
