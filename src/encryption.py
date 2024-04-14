@@ -15,22 +15,26 @@ def encrypt(key, filePath):
 
     dataFile = str(filePath)
 
-    print(filePath)
-    with open(dataFile, "r") as infile:
+    with open(dataFile, "rb") as infile:
         data = infile.read()
 
-    data = f"<name>{filePath}\0<content>{data}".encode()  # convert to bytes
+    (dir, fileName) = os.path.split(filePath)
+
+    metadata = f"{fileName}\0 ".encode()
+
+    fileName = fileName.split(".")[0]
+
+    data = metadata + data
 
     data_padded = pad(data, AES.block_size)
     ciphertext = encryptor.encrypt(data_padded)
 
     # save the encrypted data to file
-    (dir, fileName) = os.path.split(filePath)
-    fileName = fileName.split(".")[0]
     fileExtension = f".{NAMED_CONVERSION}"
     encryptedFile = os.path.join(dir, f"{NAMED_CONVERSION}_" + fileName + fileExtension)
 
     with open(encryptedFile, "wb") as f:
+        f.write(IV)
         f.write(ciphertext)
 
     # WARNING
@@ -58,35 +62,36 @@ def decrypt(key, filePath):
     decrypted_data = unpad(decrypted_data_padded, AES.block_size)
 
     # Convert bytes to string and remove the added file information
-    decrypted_data_str = decrypted_data.decode("utf-8")
-    file_info, file_content = decrypted_data_str.split("\0", 1)
-    file_path = file_info.replace("<name>", "").strip()
-    file_content = file_content.replace("<content>", "").strip()
+    metadata_index = decrypted_data.find(b"\0")
+
+    fileName = decrypted_data[:metadata_index].decode()
+    file_content = decrypted_data[metadata_index + 1 :].strip()
+
+    # print(fileName)
+    # print(file_content)
 
     # There is probably a better way for this
     (dir, _) = os.path.split(filePath)
-    (_, fileName) = os.path.split(file_path)
 
     decrypted_file = os.path.join(dir, fileName)
 
-    with open(decrypted_file, "w") as f:
+    with open(decrypted_file, "wb") as f:
         f.write(file_content)
 
-    os.remove(filePath)  # Removes the encrypted file
+    # os.remove(filePath)  # Removes the encrypted file
 
 
-""" 
-HOW TO USE EXAMPLE
-import util
+# HOW TO USE EXAMPLE
+"""import util
 import hashlib
 
-EXCLUDE_FILES = ["requirements.txt", ".gitignore", "README.md"]
+EXCLUDE_FILES = ["requirements.txt", ".gitignore"]
 EXCLUDE_EXTENSIONS = [".py", ".md"]
 ONLY_ENCRYPT_EXTENSION = [".txt", ".csv"]
 
 directory = "target_dir"
 
-for item in util.scanDirRecursive():
+for item in util.scanDirRecursive(directory):
     filePath = Path(item)
 
     fileType = filePath.suffix.lower()
@@ -97,8 +102,9 @@ for item in util.scanDirRecursive():
         continue
 
     key = hashlib.sha256("THIS IS MY KEY".encode()).digest()
+    # encrypt(key, filePath)
     # if fileType in ONLY_ENCRYPT_EXTENSION:
     #    encrypt(key, filePath)
-    if f"{NAMED_CONVERSION}_" in str(filePath):
-        decrypt(key, filePath)
+    # if f"{NAMED_CONVERSION}_" in str(filePath):
+    #    decrypt(key, filePath)
 """
