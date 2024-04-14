@@ -78,3 +78,6 @@ class Ball:
 
         self.window.geometry(f'+{int(new_x)}+{int(new_y)}')
         self.window.after(10, self.launch_ball)
+
+    def getLocation(self):
+        return self.window.winfo_x(), self.window.winfo_y()
