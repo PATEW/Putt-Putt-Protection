@@ -87,5 +87,8 @@ class Ball:
     def getLocation(self):
         return self.window.winfo_x(), self.window.winfo_y()
     
+    def getDimensions(self):
+        return self.ball.winfo_width(), self.ball.winfo_height()
+
     def getCurrentState(self):
         return self.current_state

@@ -1,10 +1,11 @@
 import pyautogui
-import course, ball, club, goal
+import course, tree, ball, club, goal
 
 def reassert_order():
     #course.window.lift()
     goal.window.lift()
     ball.window.lift()
+    tree.window.lift()
     club.window.lift()
 
 def periodic_update():
@@ -12,9 +13,15 @@ def periodic_update():
     club.rotate_club(x, y, ball.getLocation(), ball.getCurrentState())
     club.window.after(10, periodic_update)
 
+    # Detect ball
+    goal.detect_ball(ball)
+    tree.detect_collision_with_ball(ball)
+    
+
 if __name__ == '__main__':
     club = club.Club()
     #course = course.Course()
+    tree = tree.Tree()
     ball = ball.Ball()
     goal = goal.Goal()
 
