@@ -20,8 +20,7 @@ def scanDirRecursive(dir: str = "target_dir"):
         try:
             for entry in os.scandir(dir):
                 if entry.is_file():  # If it's file save and go next
-                    if not NAMED_CONVERSION in entry.path:
-                        yield entry
+                    yield entry
                 else:  # If the entry is another directory, recall function
                     yield from scanDirRecursive(entry.path)
         except PermissionError:
