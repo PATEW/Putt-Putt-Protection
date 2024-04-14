@@ -1,6 +1,7 @@
 import tkinter as tk
 
-COURSE_IMAGE = './resources/course.png'
+COURSE_IMAGE = "./resources/course.png"
+
 
 class Course:
     def __init__(self):
@@ -12,6 +13,11 @@ class Course:
         self.center_window()
 
     def center_window(self):
-        screen_width, screen_height = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
-        center_x, center_y = (screen_width - self.window.winfo_width()) // 2, (screen_height - self.window.winfo_height()) // 2
-        self.window.geometry(f'+{center_x}+{center_y}')
+        screen_width, screen_height = (
+            self.window.winfo_screenwidth(),
+            self.window.winfo_screenheight(),
+        )
+        center_x, center_y = (screen_width - self.window.winfo_width()) // 2, (
+            screen_height - self.window.winfo_height()
+        ) // 2
+        self.window.geometry(f"+{center_x}+{center_y}")
