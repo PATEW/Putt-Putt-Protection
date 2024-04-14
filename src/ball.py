@@ -3,13 +3,14 @@ import math
 
 BALL_IMAGE = './resources/ball.png'
 DECELERATION_RATE = 0.1
+CURRENT_STATE = "idle"
 
 class Ball:
     def __init__(self):
         self.is_dragging = False
         self.start_x = self.start_y = self.drag_start_x = self.drag_start_y = self.velocity_x = self.velocity_y = 0
         self.deceleration_rate = DECELERATION_RATE
-
+        self.current_state = CURRENT_STATE
         self.window = tk.Toplevel()
         self.window.overrideredirect(True)
         self.window.wm_attributes("-transparentcolor", "white", "-topmost", True)
@@ -30,6 +31,7 @@ class Ball:
         self.window.geometry(f'+{center_x}+{center_y}')
 
     def start_drag(self, event):
+        self.current_state = "start"
         self.is_dragging = True
         self.start_x, self.start_y = event.x_root, event.y_root
         self.drag_start_x, self.drag_start_y = self.start_x, self.start_y  # Capture initial drag position
@@ -37,13 +39,14 @@ class Ball:
     def on_drag(self, event):
         if not self.is_dragging:
             return
+        self.current_state = "drag"
         delta_x, delta_y = event.x_root - self.start_x, event.y_root - self.start_y
         new_x, new_y = self.window.winfo_x() + delta_x, self.window.winfo_y() + delta_y
-        self.window.geometry(f'+{new_x}+{new_y}')
         self.start_x, self.start_y = event.x_root, event.y_root
 
     def end_drag(self, event):
         self.is_dragging = False
+        self.current_state = "end"
         # Calculate the opposite velocity
         self.velocity_x = (self.drag_start_x - event.x_root) / 10
         self.velocity_y = (self.drag_start_y - event.y_root) / 10
@@ -51,6 +54,7 @@ class Ball:
 
 
     def launch_ball(self):
+        self.current_state = "launch"
         screen_width, screen_height = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
 
         # Apply deceleration to the velocity vector as a whole
@@ -65,6 +69,7 @@ class Ball:
         else:
             self.velocity_x = 0
             self.velocity_y = 0
+            self.current_state = "idle"
 
         # Update positions with boundary checks
         new_x = min(max(0, self.window.winfo_x() + self.velocity_x), screen_width - self.ball.winfo_width())
@@ -81,3 +86,6 @@ class Ball:
 
     def getLocation(self):
         return self.window.winfo_x(), self.window.winfo_y()
+    
+    def getCurrentState(self):
+        return self.current_state
