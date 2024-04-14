@@ -11,11 +11,12 @@ def reassert_order():
 def periodic_update():
     x, y = pyautogui.position()
     club.rotate_club(x, y, ball.getLocation(), ball.getCurrentState())
-    club.window.after(10, periodic_update)
-
+    
     # Detect ball
     goal.detect_ball(ball)
     tree.detect_collision_with_ball(ball)
+    
+    club.window.after(10, periodic_update)
     
 
 if __name__ == '__main__':
