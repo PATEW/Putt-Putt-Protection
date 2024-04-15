@@ -1,9 +1,12 @@
+import tkinter as tk
 import pyautogui
 from tree import Tree
 from ball import Ball
 from club import Club
 from goal import Goal
 from flag import Flag
+from sand import Sand
+from water import Water
 
 class GameController:
     def __init__(self, root):
@@ -17,6 +20,8 @@ class GameController:
         self.goal_hit = False
         self.stroke_taken = False
 
+        self.sand = Sand()
+        self.water = Water()
         self.club = Club()
         self.tree = Tree()
         self.ball = Ball()
@@ -26,6 +31,8 @@ class GameController:
         self.setup_bindings()
 
     def setup_bindings(self):
+        self.sand.window.bind("<FocusIn>", lambda e: self.reassert_order())
+        self.water.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.club.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.tree.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.ball.window.bind("<FocusIn>", lambda e: self.reassert_order())
@@ -33,6 +40,8 @@ class GameController:
         self.flag.window.bind("<FocusIn>", lambda e: self.reassert_order())
 
     def reassert_order(self):
+        self.sand.window.lift()
+        self.water.window.lift()
         self.goal.window.lift()
         self.flag.window.lift()
         self.ball.window.lift()
@@ -58,6 +67,8 @@ class GameController:
 
     def reset_game_objects(self):
         self.tree.place_tree()
+        self.sand.place_sand()
+        self.water.place_water()
         self.ball.position_ball_in_center()
         self.ball.setVelocity(0,0)
         self.goal.placegoal()
@@ -70,6 +81,8 @@ class GameController:
             self.club.rotate_club(x, y, self.ball.getLocation(), self.ball.getCurrentState())
             self.goal_hit = self.goal.detect_ball(self.ball)
             self.tree.detect_collision_with_ball(self.ball)
+            self.sand.detect_collision_with_ball(self.ball)
+            self.water.detect_collision_with_ball(self.ball)
             if self.stroke_taken == False:
                 if self.ball.getCurrentState() == "launch":
                     self.current_stroke += 1
@@ -90,12 +103,16 @@ class GameController:
 
     def make_windows_visible(self, visible):
         if visible:
+            self.sand.window.deiconify()
+            self.water.window.deiconify()
             self.club.window.deiconify()
             self.tree.window.deiconify()
             self.ball.window.deiconify()
             self.goal.window.deiconify()
             self.flag.window.deiconify()
         else:
+            self.sand.window.withdraw()
+            self.water.window.withdraw()
             self.club.window.withdraw()
             self.tree.window.withdraw()
             self.ball.window.withdraw()
