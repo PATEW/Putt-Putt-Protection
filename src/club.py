@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 
 CLUB_IMAGE = './resources/club.png'
 CURRENT_STATE = "idle"
+CLUB_SIZE = (200, 350) #Width and Height for the Club Label (No math behind it, just tested)
 
 class Club:
     def __init__(self):
@@ -11,7 +12,7 @@ class Club:
         self.window.overrideredirect(True)
         self.window.wm_attributes("-transparentcolor", "black", "-topmost", True)
         self.image = ImageTk.PhotoImage(file=CLUB_IMAGE)
-        self.label = tk.Label(self.window, image=self.image, borderwidth=0)
+        self.label = tk.Label(self.window, image=self.image, borderwidth=0, width=CLUB_SIZE[0], height=CLUB_SIZE[1])
         self.current_state = CURRENT_STATE
         self.label.pack()
 
