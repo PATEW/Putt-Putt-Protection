@@ -78,7 +78,8 @@ def main():
     print("End of program")
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
+    main()
 #    club = club.Club()
 #    # course = course.Course()
 #    tree = tree.Tree()
