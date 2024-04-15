@@ -6,7 +6,6 @@ GOAL_IMAGE = './resources/goal.png'
 class Goal:
     def __init__(self):
         self.ball_in_goal = False
-        self.game_over = False  # Control variable for game status
         self.window = tk.Toplevel()
         self.window.overrideredirect(True)
         self.window.wm_attributes("-transparentcolor", "white", "-topmost", True)
@@ -42,7 +41,6 @@ class Goal:
             if not self.ball_in_goal:
                 print("Goal touched!")
                 self.ball_in_goal = True
-                self.game_over = True  # Signal that the game should end
         else:
             self.ball_in_goal = False
 
