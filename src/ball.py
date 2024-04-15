@@ -4,6 +4,7 @@ import math
 BALL_IMAGE = './resources/ball.png'
 DECELERATION_RATE = 0.1
 CURRENT_STATE = "idle"
+START_LOCATION = (0, 0)
 
 class Ball:
     def __init__(self):
@@ -11,6 +12,7 @@ class Ball:
         self.start_x = self.start_y = self.drag_start_x = self.drag_start_y = self.velocity_x = self.velocity_y = 0
         self.deceleration_rate = DECELERATION_RATE
         self.current_state = CURRENT_STATE
+        self.start_location = START_LOCATION
         self.window = tk.Toplevel()
         self.window.overrideredirect(True)
         self.window.wm_attributes("-transparentcolor", "white", "-topmost", True)
@@ -40,6 +42,7 @@ class Ball:
         if not self.is_dragging:
             return
         self.current_state = "drag"
+        self.start_location = self.window.winfo_x(), self.window.winfo_y()
         delta_x, delta_y = event.x_root - self.start_x, event.y_root - self.start_y
         new_x, new_y = self.window.winfo_x() + delta_x, self.window.winfo_y() + delta_y
         self.start_x, self.start_y = event.x_root, event.y_root
@@ -93,8 +96,11 @@ class Ball:
     def getCurrentState(self):
         return self.current_state
     
-    def getStartLocation(self, current_location):
-        if self.current_state == "idle":
-            return self.window.winfo_x(), self.window.winfo_y()
-        return current_location
-        
+    def getStartLocation(self):
+        return self.start_location
+    
+    def stop_ball(self):
+        self.current_state = "idle"
+        self.velocity_x = 0
+        self.velocity_y = 0       
+

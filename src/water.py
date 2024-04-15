@@ -2,7 +2,6 @@ import tkinter as tk
 import random
 
 WATER_IMAGE = './resources/water.png'
-CURRENT_BALL_LOCATION = (0, 0)
 
 class Water:
     def __init__(self):
@@ -13,7 +12,6 @@ class Water:
         self.water_label = tk.Label(self.window, image=self.image, borderwidth=0)
         self.water_label.pack()
         self.place_water()
-        self.current_ball_location = CURRENT_BALL_LOCATION
 
     def place_water(self):
         screen_width = self.window.winfo_screenwidth()  # Screen dimensions
@@ -24,13 +22,14 @@ class Water:
         y = random.randint(0, screen_height - water_height)
         self.window.geometry(f'+{x}+{y}')
 
-    def detect_collision_with_ball(self, ball,):
+    def detect_collision_with_ball(self, ball):
         water_pos = self.getLocation()
         water_dims = self.getDimensions()
         ball_pos = ball.getLocation()
         ball_dims = ball.getDimensions()
-        self.current_ball_location = ball.getStartLocation(self.current_ball_location)
+        ball_startPos = ball.getStartLocation()
 
+    
         # Calculate water and ball boundaries
         water_left, water_top = water_pos
         water_right = water_left + water_dims[0]
@@ -42,10 +41,8 @@ class Water:
         # Check for collision
         if (water_left <= ball_right and water_right >= ball_left and
             water_top <= ball_bottom and water_bottom >= ball_top):
-            ball.window.geometry(f'+{self.current_ball_location[0]}+{self.current_ball_location[1]}')
-            ball.velocity_x = 0
-            ball.velocity_y = 0
-
+            ball.window.geometry(f'+{ball_startPos[0]}+{ball_startPos[1]}')
+            ball.stop_ball()
             return True
         return False
 
