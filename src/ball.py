@@ -104,3 +104,7 @@ class Ball:
         self.velocity_x = 0
         self.velocity_y = 0       
 
+    def setVelocity(self, x, y):
+        self.velocity_x = x
+        self.velocity_y = y
+        return
