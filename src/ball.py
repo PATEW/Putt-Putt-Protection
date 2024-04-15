@@ -92,3 +92,8 @@ class Ball:
 
     def getCurrentState(self):
         return self.current_state
+    
+    def setVelocity(self, x, y):
+        self.velocity_x = x
+        self.velocity_y = y
+        return

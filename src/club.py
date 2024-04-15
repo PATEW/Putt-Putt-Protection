@@ -7,7 +7,7 @@ CURRENT_STATE = "idle"
 
 class Club:
     def __init__(self):
-        self.window = tk.Tk()
+        self.window = tk.Toplevel()
         self.window.overrideredirect(True)
         self.window.wm_attributes("-transparentcolor", "black", "-topmost", True)
         self.image = ImageTk.PhotoImage(file=CLUB_IMAGE)
