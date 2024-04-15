@@ -22,7 +22,8 @@ class Club:
             # Rotate the image based on the given angle
             if y - ball_location[1] == 0 or x - ball_location[0] == 0:
                 return    
-            angle =  abs(math.atan((y - ball_location[1])/(x - ball_location[0])) * 90 / math.pi)
+            angle =  abs(math.atan((y - ball_location[1])/(x - ball_location[0])) * 180 / math.pi)
+            print(angle)
             first_Image = Image.open(CLUB_IMAGE)
             rotated_image = first_Image.rotate(angle, expand=True)
             rotated_tk_image = ImageTk.PhotoImage(rotated_image)
