@@ -94,7 +94,6 @@ class Ball:
         return self.current_state
     
     def getStartLocation(self, current_location):
-        print(self.current_state)
         if self.current_state == "idle":
             return self.window.winfo_x(), self.window.winfo_y()
         return current_location
