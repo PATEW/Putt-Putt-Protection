@@ -1,6 +1,5 @@
 import tkinter as tk
 import pyautogui
-import time
 from tree import Tree
 from ball import Ball
 from club import Club
