@@ -92,7 +92,7 @@ class GameController:
                 if self.ball.getCurrentState() == "idle":
                     self.stroke_taken = False
  
-            self.club.window.after(1, self.periodic_update)
+            self.club.window.after(10, self.periodic_update)
         else:
             self.finish_round()
 
@@ -118,10 +118,3 @@ class GameController:
             self.ball.window.withdraw()
             self.goal.window.withdraw()
             self.flag.window.withdraw()
-
-if __name__ == '__main__':
-    root = tk.Tk()
-    root.withdraw()
-    game = GameController(root)
-    game.start_game()
-    root.mainloop()
