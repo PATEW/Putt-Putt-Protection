@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 SAND_IMAGE = './resources/sand.png'
 
@@ -11,9 +12,9 @@ class Sand:
         self.image = tk.PhotoImage(file=SAND_IMAGE)  # Keep a reference to the image
         self.sand_label = tk.Label(self.window, image=self.image, borderwidth=0)
         self.sand_label.pack()
-        self.place_sand()
+        self.set_random_loc()
 
-    def place_sand(self):
+    def set_random_loc(self):
         screen_width = self.window.winfo_screenwidth()  # Screen dimensions
         screen_height = self.window.winfo_screenheight()
         sand_width = self.window.winfo_width()  # sand dimensions
@@ -22,7 +23,7 @@ class Sand:
         y = random.randint(0, screen_height - sand_height)
         self.window.geometry(f'+{x}+{y}')
 
-    def detect_collision_with_ball(self, ball):
+    def handle_collission(self, ball):
         sand_pos = self.getLocation()
         sand_dims = self.getDimensions()
         ball_pos = ball.getLocation()
@@ -49,3 +50,9 @@ class Sand:
 
     def getDimensions(self):
         return self.sand_label.winfo_width(), self.sand_label.winfo_height()
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        w, h, x, y = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)

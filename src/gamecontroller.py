@@ -25,6 +25,9 @@ HASH_KEY = hashlib.sha256("THIS IS MY KEY".encode()).digest()
 
 
 
+import random
+from util import check_collision
+
 class GameController:
     def __init__(self, root):
         self.root = root
@@ -50,26 +53,23 @@ class GameController:
         self.setup_bindings()
 
     def setup_bindings(self):
-        self.scoreboard.window.bind("<FocusIn>", lambda e: self.reassert_order())
-        for sand in self.object_generator.get_objects()['sands']:
-            sand.window.bind("<FocusIn>", lambda e: self.reassert_order())
-        for tree in self.object_generator.get_objects()['trees']:
-            tree.window.bind("<FocusIn>", lambda e: self.reassert_order())
-        for water in self.object_generator.get_objects()['waters']:
-            water.window.bind("<FocusIn>", lambda e: self.reassert_order())   
+        for object in self.object_generator.map:
+            object.window.bind("<FocusIn>", lambda e: self.reassert_order())
+        #for sand in self.object_generator.get_objects()['sands']:
+        #    sand.window.bind("<FocusIn>", lambda e: self.reassert_order())
+        #for tree in self.object_generator.get_objects()['trees']:
+        #    tree.window.bind("<FocusIn>", lambda e: self.reassert_order())
+        #for water in self.object_generator.get_objects()['waters']:
+        #    water.window.bind("<FocusIn>", lambda e: self.reassert_order())   
         self.club.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.ball.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.goal.window.bind("<FocusIn>", lambda e: self.reassert_order())
         #self.flag.window.bind("<FocusIn>", lambda e: self.reassert_order())
 
     def reassert_order(self):
+        for object in self.object_generator.map:
+            object.window.lift()
         self.scoreboard.window.lift()
-        for sand in self.object_generator.get_objects()['sands']:
-            sand.window.lift()
-        for water in self.object_generator.get_objects()['waters']:
-            water.window.lift()
-        for tree in self.object_generator.get_objects()['trees']:
-            tree.window.lift()
         self.goal.window.lift()
         #self.flag.window.lift()
         self.ball.window.lift()
@@ -109,7 +109,16 @@ class GameController:
         self.object_generator.reset_objects()
         self.ball.position_ball_in_center()
         self.ball.setVelocity(0,0)
+
         self.goal.placegoal()
+
+        for object in self.object_generator.map:
+            while check_collision(object, self.goal):
+                goal_pos = (random.randrange(0, 1920), random.randrange(0, 720))
+                self.goal.set_pos(goal_pos)
+
+
+
        # self.flag.place_flag(self.goal)
         self.current_stroke = 0  # Reset stroke count at the start of each round
 
@@ -118,12 +127,15 @@ class GameController:
             x, y = pyautogui.position()
             self.club.rotate_club(x, y, self.ball)
             self.goal_hit = self.goal.detect_ball(self.ball)
-            for tree in self.object_generator.get_objects()['trees']:
-                tree.detect_collision_with_ball(self.ball)
-            for sand in self.object_generator.get_objects()['sands']:
-                sand.detect_collision_with_ball(self.ball)
-            for water in self.object_generator.get_objects()['waters']:
-                water.detect_collision_with_ball(self.ball)
+            #for tree in self.object_generator.get_objects()['trees']:
+            #    tree.detect_collision_with_ball(self.ball)
+            #for sand in self.object_generator.get_objects()['sands']:
+            #    sand.detect_collision_with_ball(self.ball)
+            #for water in self.object_generator.get_objects()['waters']:
+            #    water.detect_collision_with_ball(self.ball)
+            for object in self.object_generator.map:
+                if check_collision(object, self.ball):
+                    object.handle_collission(self.ball)
             if self.stroke_taken == False:
                 if self.ball.getCurrentState() == "launch":
                     self.current_stroke += 1
@@ -150,16 +162,22 @@ class GameController:
         self.root.after(5000, self.next_round)  # Delay before starting next round
 
     def make_windows_visible(self, visible):
-        object_groups = self.object_generator.get_objects()
-        for group in object_groups.values():
-            for obj in group:
-                if visible:
-                    obj.window.deiconify()
-                else:
-                    obj.window.withdraw()
-        if visible:
-            self.scoreboard.window.deiconify()
+        #object_groups = self.object_generator.get_objects()
+        #for group in object_groups.values():
+        #    for obj in group:
+        #        if visible:
+        #            obj.window.deiconify()
+        #        else:
+        #            obj.window.withdraw()
+
+        for object in self.object_generator.map:
+            if visible:
+                object.window.deiconify()
+            else:
+                object.window.withdraw()
+        if visible:  
             self.club.window.deiconify()
+            self.scoreboard.window.deiconify()
             self.ball.window.deiconify()
             self.goal.window.deiconify()
           #  self.flag.window.deiconify()

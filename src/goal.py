@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 GOAL_IMAGE = './resources/goal.png'
 
@@ -22,6 +23,10 @@ class Goal:
         goal_height = self.window.winfo_height()
         x = random.randint(0, screen_width - goal_width)
         y = random.randint(0, screen_height - goal_height)
+        self.window.geometry(f'+{x}+{y}')
+    
+    def set_pos(self, pos):
+        x, y = pos
         self.window.geometry(f'+{x}+{y}')
 
     def detect_ball(self, ball):
@@ -48,3 +53,10 @@ class Goal:
 
     def getLocation(self):
         return self.window.winfo_x(), self.window.winfo_y()
+
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        w, h, x, y = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)

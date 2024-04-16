@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 WATER_IMAGE = './resources/water.png'
 
@@ -11,9 +12,9 @@ class Water:
         self.image = tk.PhotoImage(file=WATER_IMAGE)  # Keep a reference to the image
         self.water_label = tk.Label(self.window, image=self.image, borderwidth=0)
         self.water_label.pack()
-        self.place_water()
+        self.set_random_loc()
 
-    def place_water(self):
+    def set_random_loc(self):
         screen_width = self.window.winfo_screenwidth()  # Screen dimensions
         screen_height = self.window.winfo_screenheight()
         water_width = self.window.winfo_width()  # water dimensions
@@ -22,7 +23,7 @@ class Water:
         y = random.randint(0, screen_height - water_height)
         self.window.geometry(f'+{x}+{y}')
 
-    def detect_collision_with_ball(self, ball):
+    def handle_collission(self, ball):
         water_pos = self.getLocation()
         water_dims = self.getDimensions()
         ball_pos = ball.getLocation()
@@ -51,3 +52,9 @@ class Water:
 
     def getDimensions(self):
         return self.water_label.winfo_width(), self.water_label.winfo_height()
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        w, h, x, y = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)
