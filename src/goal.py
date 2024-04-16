@@ -38,7 +38,7 @@ class Goal:
 
         # Check for overlap
         if l1[0] <= r2[0] and r1[0] >= l2[0] and l1[1] <= r2[1] and r1[1] >= l2[1]:
-            if not self.ball_in_goal:
+            if not self.ball_in_goal and ball.getCurrentVelocity() < 10:
                 print("Goal touched!")
                 self.ball_in_goal = True
         else:
