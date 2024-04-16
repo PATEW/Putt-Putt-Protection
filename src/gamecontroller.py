@@ -117,6 +117,14 @@ class GameController:
         self.root.after(5000, self.next_round)  # Delay before starting next round
 
     def make_windows_visible(self, visible):
+        object_groups = self.object_generator.get_objects()
+        for group in object_groups.values():
+            for obj in group:
+                if visible:
+                    obj.window.deiconify()
+                else:
+                    obj.window.withdraw()
+        if visible:
             self.scoreboard.window.deiconify()
             self.club.window.deiconify()
             self.ball.window.deiconify()
