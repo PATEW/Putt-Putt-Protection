@@ -15,7 +15,7 @@ class objectgenerator:
     def generate_objects(self):
         # Randomly decide how many of each object to create
         sand_count = random.randint(1, 2)
-        tree_count = random.randint(1, 6)
+        tree_count = random.randint(3, 6)
         water_count = random.randint(1, 2)
 
         # Create the specified number of each object
