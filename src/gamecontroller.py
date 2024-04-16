@@ -77,7 +77,16 @@ class GameController:
         self.object_generator.reset_objects()
         self.ball.position_ball_in_center()
         self.ball.setVelocity(0,0)
+
         self.goal.placegoal()
+
+        for object in self.object_generator.map:
+            while check_collision(object, self.goal):
+                goal_pos = (random.randrange(0, 1920), random.randrange(0, 720))
+                self.goal.set_pos(goal_pos)
+
+
+
        # self.flag.place_flag(self.goal)
         self.current_stroke = 0  # Reset stroke count at the start of each round
 

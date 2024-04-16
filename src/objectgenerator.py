@@ -27,23 +27,23 @@ class objectgenerator:
 
         random.shuffle(map)
 
-        collision_detected = True
+        n = len(map)
+        obstacles = []
+        max_attempts = 10000000
+        for curr_obj in map:
+            attempts = 0 
+            placed = False
+            while not placed and attempts < max_attempts:
+                curr_obj.set_random_loc()
+                attempts += 1
+                overlapping = any(check_collision(curr_obj, obj2) for obj2 in obstacles)
+                if not overlapping:
+                    obstacles.append(curr_obj)
+                    placed = True
 
-        while collision_detected:
-            collision_detected = False
+        self.map = obstacles
 
-            n = len(map)
-            for i in range(n):
-                for j in range(i+1, n):
-                    if check_collision(map[i], map[j]):
-                        map[i].set_random_loc()
-                        map[j].set_random_loc()
-                        collision_detected = True
-                        break
-                if collision_detected:
-                    break
 
-        self.map = map
 
 
     def reset_objects(self):

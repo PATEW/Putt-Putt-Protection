@@ -24,6 +24,10 @@ class Goal:
         x = random.randint(0, screen_width - goal_width)
         y = random.randint(0, screen_height - goal_height)
         self.window.geometry(f'+{x}+{y}')
+    
+    def set_pos(self, pos):
+        x, y = pos
+        self.window.geometry(f'+{x}+{y}')
 
     def detect_ball(self, ball):
         ball_location = ball.getLocation()
