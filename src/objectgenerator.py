@@ -46,25 +46,6 @@ class objectgenerator:
         self.map = map
 
 
-    def check_collision_in_map(objects: list):
-        collision_detected = True
-
-        while collision_detected:
-            collision_detected = False
-
-            n = len(objects)
-            for i in range(n):
-                for j in range(i+1, n):
-                    if check_collision(map[i], map[j]):
-                        map[i].set_random_loc()
-                        map[j].set_random_loc()
-                        collision_detected = True
-                        break
-                if collision_detected:
-                    break
-
-
-
     def reset_objects(self):
         # Call reset or place methods on all objects
         for object  in self.map:
