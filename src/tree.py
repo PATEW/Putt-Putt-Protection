@@ -12,9 +12,9 @@ class Tree:
         self.image = tk.PhotoImage(file=TREE_IMAGE)  # Keep a reference to the image
         self.tree_label = tk.Label(self.window, image=self.image, borderwidth=0)
         self.tree_label.pack()
-        self.place_tree()
+        self.set_random_loc()
 
-    def place_tree(self):
+    def set_random_loc(self):
         screen_width = self.window.winfo_screenwidth()  # Screen dimensions
         screen_height = self.window.winfo_screenheight()
         tree_width = self.window.winfo_width()  # Tree dimensions
@@ -23,7 +23,7 @@ class Tree:
         y = random.randint(0, screen_height - tree_height)
         self.window.geometry(f'+{x}+{y}')
 
-    def detect_collision_with_ball(self, ball):
+    def handle_collission(self, ball):
         tree_pos = self.getLocation()
         tree_dims = self.getDimensions()
         ball_pos = ball.getLocation()
@@ -66,7 +66,7 @@ class Tree:
     def getBounds(self):
         geometry = self.window.geometry()
 
-        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        w, h, x, y = map(int, re.findall(r'(\d+)', geometry))
         return (x, y, x+w, y+h)
 
     def getDimensions(self):

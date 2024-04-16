@@ -50,5 +50,5 @@ class Club:
     def getBounds(self):
         geometry = self.window.geometry()
 
-        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        w, h, x, y = map(int, re.findall(r'(\d+)', geometry))
         return (x, y, x+w, y+h)
