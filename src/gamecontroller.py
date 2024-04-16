@@ -8,6 +8,7 @@ from goal import Goal
 from sand import Sand
 from objectgenerator import objectgenerator
 from water import Water
+from scoreboard import ScoreBoard
 
 
 class GameController:
@@ -22,6 +23,8 @@ class GameController:
         self.goal_hit = False
         self.stroke_taken = False
 
+
+        self.scoreboard = ScoreBoard()
         self.object_generator = objectgenerator()
         self.club = Club()
         self.ball = Ball()
@@ -31,6 +34,7 @@ class GameController:
         self.setup_bindings()
 
     def setup_bindings(self):
+        self.scoreboard.window.bind("<FocusIn>", lambda e: self.reassert_order())
         for sand in self.object_generator.get_objects()['sands']:
             sand.window.bind("<FocusIn>", lambda e: self.reassert_order())
         for tree in self.object_generator.get_objects()['trees']:
@@ -43,6 +47,7 @@ class GameController:
         #self.flag.window.bind("<FocusIn>", lambda e: self.reassert_order())
 
     def reassert_order(self):
+        self.scoreboard.window.lift()
         for sand in self.object_generator.get_objects()['sands']:
             sand.window.lift()
         for water in self.object_generator.get_objects()['waters']:
@@ -68,10 +73,12 @@ class GameController:
 
     def start_round(self):
         self.reset_game_objects()
+        self.scoreboard.update_strokes(0)
         self.make_windows_visible(True)
         self.club.window.after(10, self.periodic_update)
 
     def reset_game_objects(self):
+        self.scoreboard.place_scoreboard()
         self.object_generator.reset_objects()
         self.ball.position_ball_in_center()
         self.ball.setVelocity(0,0)
@@ -99,6 +106,7 @@ class GameController:
                 if self.ball.getCurrentState() == "idle":
                     self.stroke_taken = False
  
+            self.scoreboard.update_strokes(self.current_stroke)
             self.club.window.after(1, self.periodic_update)
         else:
             self.finish_round()
@@ -109,19 +117,13 @@ class GameController:
         self.root.after(5000, self.next_round)  # Delay before starting next round
 
     def make_windows_visible(self, visible):
-        object_groups = self.object_generator.get_objects()
-        for group in object_groups.values():
-            for obj in group:
-                if visible:
-                    obj.window.deiconify()
-                else:
-                    obj.window.withdraw()
-        if visible:  
+            self.scoreboard.window.deiconify()
             self.club.window.deiconify()
             self.ball.window.deiconify()
             self.goal.window.deiconify()
           #  self.flag.window.deiconify()
         else:
+            self.scoreboard.window.withdraw()
             self.club.window.withdraw()
             self.ball.window.withdraw()
             self.goal.window.withdraw()
