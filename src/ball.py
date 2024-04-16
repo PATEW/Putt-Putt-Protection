@@ -39,21 +39,22 @@ class Ball:
         self.drag_start_x, self.drag_start_y = self.start_x, self.start_y  # Capture initial drag position
 
     def on_drag(self, event):
+        self.current_state = "drag"
         if not self.is_dragging:
             return
-        self.current_state = "drag"
         self.start_location = self.window.winfo_x(), self.window.winfo_y()
         delta_x, delta_y = event.x_root - self.start_x, event.y_root - self.start_y
         new_x, new_y = self.window.winfo_x() + delta_x, self.window.winfo_y() + delta_y
         self.start_x, self.start_y = event.x_root, event.y_root
 
     def end_drag(self, event):
-        self.is_dragging = False
         self.current_state = "end"
+        self.is_dragging = False
         # Calculate the opposite velocity
         self.velocity_x = (self.drag_start_x - event.x_root) / 10
         self.velocity_y = (self.drag_start_y - event.y_root) / 10
         self.launch_ball()
+        
 
 
     def launch_ball(self):
@@ -63,16 +64,19 @@ class Ball:
         # Apply deceleration to the velocity vector as a whole
         magnitude = math.sqrt(self.velocity_x**2 + self.velocity_y**2)
         decelerated_magnitude = max(0, magnitude - self.deceleration_rate)
-
+        
         # Scale the velocity components proportionally to the new magnitude
         if decelerated_magnitude > 0 and magnitude > 0:
             scale_factor = decelerated_magnitude / magnitude
             self.velocity_x *= scale_factor
             self.velocity_y *= scale_factor
         else:
+            self.current_state = "idle"
             self.velocity_x = 0
             self.velocity_y = 0
-            self.current_state = "idle"
+            return
+            
+            
 
         # Update positions with boundary checks
         new_x = min(max(0, self.window.winfo_x() + self.velocity_x), screen_width - self.ball.winfo_width())
