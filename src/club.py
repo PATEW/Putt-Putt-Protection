@@ -1,6 +1,7 @@
 import math
 import tkinter as tk
 from PIL import Image, ImageTk
+import re
 
 CLUB_IMAGE = './resources/club.png'
 CURRENT_STATE = "idle"
@@ -47,3 +48,8 @@ class Club:
             self.window.geometry(f'+{x - self.window.winfo_width() // 2}+{y - self.window.winfo_height() // 2}')
         
        
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)

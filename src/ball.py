@@ -1,5 +1,6 @@
 import tkinter as tk
 import math
+import re
 
 BALL_IMAGE = './resources/ball.png'
 DECELERATION_RATE = 0.1
@@ -98,7 +99,14 @@ class Ball:
     
     def getStartLocation(self):
         return self.start_location
-    
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)
+
+
     def stop_ball(self):
         self.current_state = "idle"
         self.velocity_x = 0

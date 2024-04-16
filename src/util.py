@@ -27,3 +27,14 @@ def scanDirRecursive(dir: str = "target_dir"):
             print("PermissionError Babyyy")
         except Exception:
             raise Exception
+
+def check_collision(obj1, obj2):
+    # Check for collision between two objects
+
+    x1, y1, x2, y2 = obj1.getBounds()
+    x3, y3, x4, y4 = obj2.getBounds()
+
+    horizontal_collision = (x1 <= x4) and (x3 <= x2)
+    vertical_colllision = (y1 <= y4) and (y3 <= y2)
+
+    return horizontal_collision and vertical_colllision

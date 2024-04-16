@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 TREE_IMAGE = './resources/tree.png'
 
@@ -61,6 +62,12 @@ class Tree:
 
     def getLocation(self):
         return self.window.winfo_x(), self.window.winfo_y()
+    
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)
 
     def getDimensions(self):
         return self.tree_label.winfo_width(), self.tree_label.winfo_height()

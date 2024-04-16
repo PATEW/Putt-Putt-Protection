@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 SAND_IMAGE = './resources/sand.png'
 
@@ -49,3 +50,9 @@ class Sand:
 
     def getDimensions(self):
         return self.sand_label.winfo_width(), self.sand_label.winfo_height()
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)

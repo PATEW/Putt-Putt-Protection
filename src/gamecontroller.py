@@ -8,6 +8,8 @@ from flag import Flag
 from sand import Sand
 from water import Water
 
+from util import check_collision
+
 class GameController:
     def __init__(self, root):
         self.root = root
@@ -79,10 +81,20 @@ class GameController:
         if self.current_stroke <= self.max_strokes and not self.goal_hit:
             x, y = pyautogui.position()
             self.club.rotate_club(x, y, self.ball.getLocation(), self.ball.getCurrentState())
-            self.goal_hit = self.goal.detect_ball(self.ball)
-            self.tree.detect_collision_with_ball(self.ball)
-            self.sand.detect_collision_with_ball(self.ball)
-            self.water.detect_collision_with_ball(self.ball)
+
+
+            if check_collision(self.goal, self.ball):
+                #print("goal and ball")
+                self.goal_hit = self.goal.detect_ball(self.ball)
+            if check_collision(self.ball, self.tree):
+                #print("tree and ball")
+                self.tree.detect_collision_with_ball(self.ball)
+            if check_collision(self.ball, self.sand):
+                #print("sand and ball")
+                self.sand.detect_collision_with_ball(self.ball)
+            if check_collision(self.ball, self.water):
+                #print("water and ball")
+                self.water.detect_collision_with_ball(self.ball)
             if self.stroke_taken == False:
                 if self.ball.getCurrentState() == "launch":
                     self.current_stroke += 1
@@ -118,3 +130,4 @@ class GameController:
             self.ball.window.withdraw()
             self.goal.window.withdraw()
             self.flag.window.withdraw()
+    

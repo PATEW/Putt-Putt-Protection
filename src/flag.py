@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 FLAG_IMAGE = './resources/flag.png'
 
@@ -21,3 +22,10 @@ class Flag:
         goal_height = goal.window.winfo_height()
         # Adjust flag position to be on top of the goal, center it if needed
         self.window.geometry(f"+{x + goal_width // 2 - self.image.width() // 2}+{y + goal_height // 2 - self.image.height() // 2}")
+    
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)

@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 WATER_IMAGE = './resources/water.png'
 
@@ -51,3 +52,9 @@ class Water:
 
     def getDimensions(self):
         return self.water_label.winfo_width(), self.water_label.winfo_height()
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        x, y, w, h = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)

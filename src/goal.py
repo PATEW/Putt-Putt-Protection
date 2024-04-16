@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+import re
 
 GOAL_IMAGE = './resources/goal.png'
 
@@ -48,3 +49,10 @@ class Goal:
 
     def getLocation(self):
         return self.window.winfo_x(), self.window.winfo_y()
+
+
+    def getBounds(self):
+        geometry = self.window.geometry()
+
+        w, h, x, y = map(int, re.findall(r'(\d+)', geometry))
+        return (x, y, x+w, y+h)
