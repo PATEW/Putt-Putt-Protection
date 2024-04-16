@@ -25,11 +25,9 @@ class objectgenerator:
 
         map = sands + trees + waters
 
-        random.shuffle(map)
-
         n = len(map)
         obstacles = []
-        max_attempts = 10000000
+        max_attempts = 10000 #In case it takes too long
         for curr_obj in map:
             attempts = 0 
             placed = False
