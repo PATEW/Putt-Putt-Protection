@@ -48,7 +48,8 @@ def encrypt(key, filePath):
     # WARNING
     # It will delete the original file, only uncomment if you are sure
     # VERY RISKY, THERE SHOULD BE MORE SAFE GUARDS
-    # os.remove(filePath)
+    os.remove(filePath)
+    return encryptedFile
 
 
 def decrypt(key, filePath):

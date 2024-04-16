@@ -73,6 +73,7 @@ class Ball:
             self.velocity_x = 0
             self.velocity_y = 0
             self.current_state = "idle"
+            return
 
         # Update positions with boundary checks
         new_x = min(max(0, self.window.winfo_x() + self.velocity_x), screen_width - self.ball.winfo_width())

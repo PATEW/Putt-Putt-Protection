@@ -19,6 +19,7 @@ EXCLUDE_FILES = ["requirements.txt", ".gitignore"]
 EXCLUDE_EXTENSIONS = [".py", ".md"]
 ONLY_ENCRYPT_EXTENSION = [".txt", ".csv"]
 TARGET_DIR = "target_dir"
+HASH_KEY = hashlib.sha256("THIS IS MY KEY".encode()).digest()
 
 class GameController:
     def __init__(self, root):
@@ -40,6 +41,7 @@ class GameController:
         self.flag = Flag(self.goal)
         self.files_in_dir = [items for items in util.scanDirRecursive(TARGET_DIR)]
         self.max_rounds = len(self.files_in_dir)
+        self.encrypted_file = ""
 
         self.setup_bindings()
 
@@ -62,6 +64,7 @@ class GameController:
         self.club.window.lift()
 
     def start_game(self):
+        print(f"You will be playing a total of {self.max_rounds} rounds... GOOD LUCK")
         self.next_round()
 
     def next_round(self):
@@ -79,10 +82,8 @@ class GameController:
         target_file = self.files_in_dir[target_index]
         filePath = Path(target_file)
 
-        key = hashlib.sha256("THIS IS MY KEY".encode()).digest()
         if util.NAMED_CONVERSION not in target_file.path:
-            print("Enc")
-            encryption.encrypt(key, filePath)
+            self.encrypted_file = encryption.encrypt(HASH_KEY, filePath)
 
         self.reset_game_objects()
         self.make_windows_visible(True)
@@ -112,13 +113,17 @@ class GameController:
                 if self.ball.getCurrentState() == "launch":
                     self.current_stroke += 1
                     self.stroke_taken = True
-                    print(self.current_stroke)
             else:
                 if self.ball.getCurrentState() == "idle":
                     self.stroke_taken = False
  
             self.club.window.after(10, self.periodic_update)
+        elif self.current_stroke < self.max_strokes and self.goal_hit:
+            print("Good job!, you saved your file")
+            encryption.decrypt(HASH_KEY, self.encrypted_file)
+            self.finish_round()
         else:
+            print("It be like that..., bye bye file")
             self.finish_round()
 
     def finish_round(self):

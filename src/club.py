@@ -33,7 +33,6 @@ class Club:
             self.window.geometry(f'+{x - self.window.winfo_width() // 2}+{y - self.window.winfo_height() // 2}')
 
         elif self.current_state == "drag":
-            print(y, x)
             if y - ball_location[1] == 0 or x - ball_location[0] == 0:
                 return    
             angle =  ((y - ball_location[1]) + (x - ball_location[0])/2) * 2 / math.pi
