@@ -1,6 +1,7 @@
 import tkinter as tk
 import math
 import re
+import random
 
 BALL_IMAGE = './resources/ball.png'
 DECELERATION_RATE = 0.1
@@ -31,6 +32,7 @@ class Ball:
     def position_ball_in_center(self):
         screen_width, screen_height = self.window.winfo_screenwidth(), self.window.winfo_screenheight()
         center_x, center_y = (screen_width - self.ball.winfo_reqwidth()) // 2, (screen_height - self.ball.winfo_reqheight()) // 2
+        self.start_location = (random.randint(0, screen_width), random.randint(0, screen_height))
         self.window.geometry(f'+{center_x}+{center_y}')
 
     def start_drag(self, event):
@@ -120,3 +122,7 @@ class Ball:
         self.velocity_x = x
         self.velocity_y = y
         return
+    
+    def getCurrentVelocity(self):
+        return math.sqrt(self.velocity_x**2 + self.velocity_y**2)
+
