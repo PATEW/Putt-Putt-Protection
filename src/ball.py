@@ -114,6 +114,5 @@ class Ball:
         return
     
     def getCurrentVelocity(self):
-        print(math.sqrt(self.velocity_x**2 + self.velocity_y**2))
         return math.sqrt(self.velocity_x**2 + self.velocity_y**2)
 
