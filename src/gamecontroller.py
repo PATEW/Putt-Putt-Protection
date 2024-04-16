@@ -7,6 +7,7 @@ from goal import Goal
 from flag import Flag
 from sand import Sand
 from water import Water
+from scoreboard import ScoreBoard
 
 class GameController:
     def __init__(self, root):
@@ -20,6 +21,7 @@ class GameController:
         self.goal_hit = False
         self.stroke_taken = False
 
+        self.scoreboard = ScoreBoard()
         self.sand = Sand()
         self.water = Water()
         self.club = Club()
@@ -31,6 +33,7 @@ class GameController:
         self.setup_bindings()
 
     def setup_bindings(self):
+        self.scoreboard.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.sand.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.water.window.bind("<FocusIn>", lambda e: self.reassert_order())
         self.club.window.bind("<FocusIn>", lambda e: self.reassert_order())
@@ -40,6 +43,7 @@ class GameController:
         self.flag.window.bind("<FocusIn>", lambda e: self.reassert_order())
 
     def reassert_order(self):
+        self.scoreboard.window.lift()
         self.sand.window.lift()
         self.water.window.lift()
         self.goal.window.lift()
@@ -62,10 +66,12 @@ class GameController:
 
     def start_round(self):
         self.reset_game_objects()
+        self.scoreboard.update_strokes(0)
         self.make_windows_visible(True)
         self.club.window.after(10, self.periodic_update)
 
     def reset_game_objects(self):
+        self.scoreboard.place_scoreboard()
         self.tree.place_tree()
         self.sand.place_sand()
         self.water.place_water()
@@ -92,6 +98,7 @@ class GameController:
                 if self.ball.getCurrentState() == "idle":
                     self.stroke_taken = False
  
+            self.scoreboard.update_strokes(self.current_stroke)
             self.club.window.after(10, self.periodic_update)
         else:
             self.finish_round()
@@ -103,6 +110,7 @@ class GameController:
 
     def make_windows_visible(self, visible):
         if visible:
+            self.scoreboard.window.deiconify()
             self.sand.window.deiconify()
             self.water.window.deiconify()
             self.club.window.deiconify()
@@ -111,6 +119,7 @@ class GameController:
             self.goal.window.deiconify()
             self.flag.window.deiconify()
         else:
+            self.scoreboard.window.withdraw()
             self.sand.window.withdraw()
             self.water.window.withdraw()
             self.club.window.withdraw()
