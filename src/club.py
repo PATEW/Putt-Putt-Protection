@@ -3,7 +3,6 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 CLUB_IMAGE = './resources/club.png'
-CURRENT_STATE = "idle"
 CLUB_SIZE = (200, 350) #Width and Height for the Club Label (No math behind it, just tested)
 
 class Club:
@@ -13,13 +12,13 @@ class Club:
         self.window.wm_attributes("-transparentcolor", "black", "-topmost", True)
         self.image = ImageTk.PhotoImage(file=CLUB_IMAGE)
         self.label = tk.Label(self.window, image=self.image, borderwidth=0, width=CLUB_SIZE[0], height=CLUB_SIZE[1])
-        self.current_state = CURRENT_STATE
         self.label.pack()
 
-    def rotate_club(self, x, y, ball_location, current_state):
-        self.current_state = current_state
-
-        if self.current_state == "idle":    
+    def rotate_club(self, x, y, ball):
+        ball_location = ball.getLocation()
+        current_state = ball.current_state
+        
+        if current_state == "idle":    
             # Rotate the image based on the given angle
             if y - ball_location[1] == 0 or x - ball_location[0] == 0:
                 return    
@@ -32,8 +31,7 @@ class Club:
             label.image = rotated_tk_image  # prevent garbage collection
             self.window.geometry(f'+{x - self.window.winfo_width() // 2}+{y - self.window.winfo_height() // 2}')
 
-        elif self.current_state == "drag":
-            print(y, x)
+        elif current_state == "drag":
             if y - ball_location[1] == 0 or x - ball_location[0] == 0:
                 return    
             angle =  ((y - ball_location[1]) + (x - ball_location[0])/2) * 2 / math.pi

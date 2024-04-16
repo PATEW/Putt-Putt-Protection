@@ -23,6 +23,7 @@ class Sand:
         self.window.geometry(f'+{x}+{y}')
 
     def detect_collision_with_ball(self, ball):
+        print(ball.deceleration_rate)
         sand_pos = self.getLocation()
         sand_dims = self.getDimensions()
         ball_pos = ball.getLocation()

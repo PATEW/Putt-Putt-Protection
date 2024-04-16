@@ -78,7 +78,7 @@ class GameController:
     def periodic_update(self):
         if self.current_stroke <= self.max_strokes and not self.goal_hit:
             x, y = pyautogui.position()
-            self.club.rotate_club(x, y, self.ball.getLocation(), self.ball.getCurrentState())
+            self.club.rotate_club(x, y, self.ball)
             self.goal_hit = self.goal.detect_ball(self.ball)
             self.tree.detect_collision_with_ball(self.ball)
             self.sand.detect_collision_with_ball(self.ball)
@@ -92,7 +92,7 @@ class GameController:
                 if self.ball.getCurrentState() == "idle":
                     self.stroke_taken = False
  
-            self.club.window.after(10, self.periodic_update)
+            self.club.window.after(1, self.periodic_update)
         else:
             self.finish_round()
 
